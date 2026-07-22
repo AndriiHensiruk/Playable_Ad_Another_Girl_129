@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <title>Playable_Ad_Another_Girl_129</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    /* ОСНОВНИЙ КОНТЕЙНЕР (9:16) */
+    .frame {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      max-width: calc(100vh * 9 / 16);
+      max-height: calc(100vw * 16 / 9);
+      background: #000;
+      overflow: hidden;
+      box-shadow: 0 0 30px rgba(0,0,0,0.8);
+      will-change: transform;
+      transform-style: preserve-3d;
+    }
+
+    /* 🎥 Camera Drift (постійне живе дихання всієї сцени) */
+    .frame-viewport {
+      position: absolute;
+      inset: -5%;
+      width: 110%;
+      height: 110%;
+      animation: cameraDrift 16s ease-in-out infinite alternate;
+      will-change: transform, filter;
+    }
+
+    /* 🌫️ Motion Blur під час швидкого руху/струсу */
+    .frame.shake {
+      animation: screenShake 0.35s cubic-bezier(.36,.07,.19,.97) both;
+    }
+
+    .splash, .playable {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* === СЦЕНА 1: СПЛЕШ ЕКРАН === */
+    .splash {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.6s;
+    }
+
+    .splash.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    /* 🏔️ Паралакс-шар фону */
+    .splash-bg {
+      position: absolute;
+      inset: -5%;
+      background: url('assets/scene_base.png') center/cover no-repeat;
+      filter: blur(14px) brightness(0.6);
+      transform: scale(1.1);
+      animation: parallaxBg 10s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+
+    /* 🏔️ Паралакс-шар персонажа */
+    .splash-hero {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: url('assets/scene_base.png') center/contain no-repeat;
+      animation: heroBreathing 4s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+
+    .splash-ui {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 85%;
+      height: 100%;
+      justify-content: space-between;
+      padding: 10% 0 15% 0;
+    }
+
+    .logo {
+      width: 90%;
+      aspect-ratio: 20/7;
+      background: url('assets/title.png') center/contain no-repeat;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
+      animation: floatLogo 3s ease-in-out infinite;
+      will-change: transform;
+    }
+
+    .start-btn {
+      position: relative;
+      width: 100%;
+      max-width: 320px;
+      aspect-ratio: 2.2/1;
+      background: url('assets/start-btn.png') center/contain no-repeat;
+      border: none;
+      cursor: pointer;
+      outline: none;
+      animation: btnPulse 1.8s infinite;
+      filter: drop-shadow(0 0 15px rgba(255, 105, 180, 0.6));
+      overflow: hidden;
+      border-radius: 20px;
+      margin-bottom: 20%;
+      will-change: transform, filter;
+    }
+
+    /* 💡 Light Sweep (Світловий відблиск) */
+    .start-btn::after, .cta button::after {
+      content: '';
+      position: absolute;
+      top: 30%;
+      left: -150%;
+      width: 60%;
+      height: 50%;
+      background: linear-gradient(
+        60deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.85) 50%,
+        transparent 50%
+      );
+      transform: rotate(25deg);
+      animation: lightSweep 2.8s infinite ease-in-out;
+      will-change: left;
+    }
+
+    /* === СЦЕНА 2: ІГРОВИЙ ПРОЦЕС === */
+    .playable {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.6s ease, visibility 0.6s;
+    }
+
+    .playable.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* 🎬 Cinematic Zoom / Дихання шарів */
+    .stage-layer {
+      position: absolute;
+      inset: 0;
+      background-position: center;
+      background-size: contain;
+      background-repeat: no-repeat;
+      opacity: 0;
+      transform: scale(1);
+      transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 1;
+      animation: characterBreathing 4s ease-in-out infinite alternate;
+      will-change: transform, opacity;
+    }
+
+    .stage-layer.active {
+      opacity: 1;
+      transform: scale(1.02);
+    }
+
+    /* Контури */
+    .contour {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      z-index: 40;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      animation: characterBreathing 4s ease-in-out infinite alternate;
+      will-change: opacity, transform, filter;
+    }
+
+    .contour.active {
+      opacity: 1;
+      animation: contourGlow 1.5s ease-in-out infinite alternate, characterBreathing 4s ease-in-out infinite alternate;
+    }
+
+    /* Хітбокси */
+    .hitbox {
+      position: absolute;
+      z-index: 100 !important;
+      cursor: pointer;
+      display: none;
+    }
+
+    .hitbox.active {
+      display: block;
+    }
+
+    .hitbox.top {
+      top: 38%;
+      height: 40%;
+      width: 70%;
+      left: 15%;
+    }
+
+    .hitbox.bottom {
+      top: 72%;
+      height: 30%;
+      width: 70%;
+      left: 15%;
+    }
+
+    /* 💥 Покращений Ripple + Shockwave */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,105,180,0.6) 40%, rgba(255,20,147,0.2) 70%, transparent 100%);
+      transform: translate(-50%, -50%) scale(0);
+      animation: enhancedRipple 0.65s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+      pointer-events: none;
+      z-index: 140;
+      will-change: transform, opacity;
+    }
+
+    /* Частинки тапів */
+    .particle {
+      position: absolute;
+      pointer-events: none;
+      z-index: 145;
+      font-size: 22px;
+      animation: particleFly 0.85s cubic-bezier(0.15, 0.85, 0.35, 1.2) forwards;
+      will-change: transform, opacity;
+    }
+
+    /* === ОБОРЛОНКИ ТА ЕФЕКТИ НАКЛАДАННЯ === */
+
+    /* ✨ Canvas для іскор (Floating Spark Particles) */
+    #sparkCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 120;
+    }
+
+    /* 🌞 Bloom Overlay */
+    .bloom-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 130;
+      background: radial-gradient(circle at 50% 30%, rgba(255, 220, 240, 0.15), transparent 70%);
+      mix-blend-mode: screen;
+    }
+
+    /* 🌗 Vignette Overlay*/
+    .vignette-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 131;
+      background: radial-gradient(circle at center, transparent 55%, rgba(10, 5, 18, 0.75) 100%);
+    }
+
+    /* ⚡ Flash при зміні сцени */
+    .flash-overlay {
+      position: absolute;
+      inset: 0;
+      background: #ffffff;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 160;
+      will-change: opacity;
+    }
+
+    .flash-overlay.active {
+      animation: flashAnim 0.45s ease-out forwards;
+    }
+
+    /* === СЦЕНА 3: ФІНАЛЬНИЙ ЕКРАН === */
+    .cta {
+      position: absolute;
+      bottom: 12%;
+      left: 50%;
+      transform: translateX(-50%) scale(0.8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 85%;
+      z-index: 150;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .cta.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) scale(1);
+    }
+
+    /* ✨ Glow навколо CTA та пульсація */
+    .cta button {
+      position: relative;
+      width: 100%;
+      max-width: 320px;
+      aspect-ratio: 2.2/1;
+      background: url('assets/play-btn.png') center/contain no-repeat;
+      border: none;
+      cursor: pointer;
+      outline: none;
+      animation: btnPulse 1.8s infinite, ctaGlow 2s ease-in-out infinite alternate;
+      overflow: hidden;
+      border-radius: 20px;
+      will-change: transform, filter;
+    }
+
+    /* Кнопка музики */
+    .music-btn {
+      position: absolute;
+      top: 40px;
+      right: 20px;
+      width: 42px;
+      height: 42px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+      color: #fff;
+      font-size: 18px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 200;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.2s;
+    }
+
+    .music-btn:active {
+      transform: scale(0.9);
+    }
+
+    /* === КЛЮЧОВІ АНІМАЦІЇ === */
+
+    /* 🎥 Camera Drift Animation */
+    @keyframes cameraDrift {
+      0% { transform: scale(1) translate(0, 0); }
+      50% { transform: scale(1.025) translate(-1%, 0.8%); }
+      100% { transform: scale(1.015) translate(1%, -0.5%); }
+    }
+
+    /* 🏔️ Parallax Bg */
+    @keyframes parallaxBg {
+      0% { transform: scale(1.1) translate(0, 0); }
+      100% { transform: scale(1.15) translate(-1.5%, -1%); }
+    }
+
+    @keyframes btnPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+      100% { transform: scale(1); }
+    }
+
+    /* ✨ CTA Glow */
+    @keyframes ctaGlow {
+      0% { filter: drop-shadow(0 0 12px rgba(255, 65, 108, 0.6)); }
+      100% { filter: drop-shadow(0 0 28px rgba(255, 105, 180, 0.95)) drop-shadow(0 0 40px rgba(255,20,147,0.5)); }
+    }
+
+    /* 💡 Light Sweep */
+    @keyframes lightSweep {
+      0% { left: -150%; }
+      35%, 100% { left: 150%; }
+    }
+
+    @keyframes floatLogo {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes heroBreathing {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.025); }
+    }
+
+    @keyframes characterBreathing {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.018); }
+    }
+
+    @keyframes contourGlow {
+      0% { opacity: 0.4; filter: drop-shadow(0 0 4px rgba(255,255,255,0.6)); }
+      100% { opacity: 1; filter: drop-shadow(0 0 15px rgba(255,255,255,1)) drop-shadow(0 0 25px rgba(255,105,180,0.8)); }
+    }
+
+    /* 💥 Enhanced Ripple */
+    @keyframes enhancedRipple {
+      0% { width: 0px; height: 0px; opacity: 1; filter: blur(0px); }
+      100% { width: 260px; height: 260px; opacity: 0; filter: blur(4px); }
+    }
+
+    @keyframes particleFly {
+      0% { opacity: 1; transform: translate(0, 0) scale(0.8) rotate(0deg); }
+      100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.6) rotate(25deg); }
+    }
+
+    /* 🌫️ Screen Shake & Motion Blur */
+    @keyframes screenShake {
+      0% { transform: translate3d(0,0,0); filter: blur(0px); }
+      20% { transform: translate3d(-6px, 3px, 0); filter: blur(1.5px); }
+      40% { transform: translate3d(5px, -4px, 0); filter: blur(1px); }
+      60% { transform: translate3d(-4px, 2px, 0); filter: blur(0.5px); }
+      80% { transform: translate3d(2px, -1px, 0); filter: blur(0px); }
+      100% { transform: translate3d(0, 0, 0); filter: blur(0px); }
+    }
+
+    /* ⚡ Flash Animation */
+    @keyframes flashAnim {
+      0% { opacity: 0.85; }
+      100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="frame" id="mainFrame">
+    <!-- Viewport для ефекту живого руху камери -->
+    <div class="frame-viewport" id="viewport">
+      
+      <!-- Overlays (Накладення атмосферності) -->
+      <div class="bloom-overlay"></div>
+      <div class="vignette-overlay"></div>
+      <div class="flash-overlay" id="flashOverlay"></div>
+      <canvas id="sparkCanvas"></canvas>
+
+      <!-- 1. СПЛЕШ СЦЕНА -->
+      <div class="splash" id="splash">
+        <div class="splash-bg"></div>
+        <div class="splash-hero"></div>
+        <div class="splash-ui">
+          <div class="logo"></div>
+          <button class="start-btn" id="startBtn"></button>
+        </div>
+      </div>
+
+      <!-- 2. ІГРОВА СЦЕНА -->
+      <div class="playable" id="playable">
+        <button id="musicToggle" class="music-btn">🔊</button>
+
+        <!-- Шари сцен (.png) -->
+        <div id="stageBase" class="stage-layer active" style="background-image: url('assets/scene_base.png');"></div>
+        <div id="stageTop1" class="stage-layer" style="background-image: url('assets/scene_top_1.png');"></div>
+        <div id="stageTop2" class="stage-layer" style="background-image: url('assets/scene_top_2.png');"></div>
+        <div id="stageFinal" class="stage-layer" style="background-image: url('assets/scene_final.png');"></div>
+
+        <!-- Контури -->
+        <img src="assets/contour_top_1.png" id="contourTop1" class="contour active" alt="Contour">
+        <img src="assets/contour_top_2.png" id="contourTop2" class="contour" alt="Contour">
+        <img src="assets/contour_bottom_1.png" id="contourBottom1" class="contour" alt="Contour">
+
+        <!-- Хітбокси -->
+        <div id="hitboxTop" class="hitbox top active"></div>
+        <div id="hitboxBottom" class="hitbox bottom"></div>
+
+        <!-- 3. ФІНАЛЬНА СЦЕНА -->
+        <div class="cta" id="cta">
+          <button onclick="goGame()"></button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Аудіо -->
+  <audio id="bgMusic" src="assets/bg-music.mp3" loop muted></audio>
+  <audio id="removeSound" src="assets/remove.mp3"></audio>
+  <audio id="winSound" src="assets/win.mp3"></audio>
+
+  <script>
+    const state = {
+      topStep: 0,       
+      bottomStep: 0,    
+      maxTopSteps: 2,   
+      maxBottomSteps: 1,
+      gameStarted: false,
+      isFinished: false
+    };
+
+    const elements = {
+      frame: document.getElementById('mainFrame'),
+      viewport: document.getElementById('viewport'),
+      flashOverlay: document.getElementById('flashOverlay'),
+      splash: document.getElementById('splash'),
+      startBtn: document.getElementById('startBtn'),
+      playable: document.getElementById('playable'),
+      bgMusic: document.getElementById('bgMusic'),
+      removeSound: document.getElementById('removeSound'),
+      winSound: document.getElementById('winSound'),
+      musicToggle: document.getElementById('musicToggle'),
+      hitboxTop: document.getElementById('hitboxTop'),
+      hitboxBottom: document.getElementById('hitboxBottom'),
+      cta: document.getElementById('cta'),
+      canvas: document.getElementById('sparkCanvas'),
+      
+      stages: {
+        base: document.getElementById('stageBase'),
+        top1: document.getElementById('stageTop1'),
+        top2: document.getElementById('stageTop2'),
+        final: document.getElementById('stageFinal')
+      },
+      
+      contours: {
+        top1: document.getElementById('contourTop1'),
+        top2: document.getElementById('contourTop2'),
+        bottom1: document.getElementById('contourBottom1')
+      }
+    };
+
+    /* =========================================================
+       ✨ FLOATING SPARK PARTICLES (Атмосферний Canvas)
+       ========================================================= */
+    const ctx = elements.canvas.getContext('2d');
+    let sparks = [];
+
+    function resizeCanvas() {
+      elements.canvas.width = elements.frame.clientWidth;
+      elements.canvas.height = elements.frame.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Spark {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * elements.canvas.width;
+        this.y = elements.canvas.height + Math.random() * 20;
+        this.size = Math.random() * 2.5 + 0.8;
+        this.speedY = Math.random() * 0.8 + 0.3;
+        this.speedX = (Math.random() - 0.5) * 0.5;
+        this.opacity = Math.random() * 0.7 + 0.3;
+        this.fade = Math.random() * 0.005 + 0.002;
+      }
+      update() {
+        this.y -= this.speedY;
+        this.x += this.speedX;
+        this.opacity -= this.fade;
+        if (this.opacity <= 0 || this.y < -10) {
+          this.reset();
+        }
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 215, 230, ${this.opacity})`;
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < 35; i++) {
+      sparks.push(new Spark());
+    }
+
+    function animateSparks() {
+      ctx.clearRect(0, 0, elements.canvas.width, elements.canvas.height);
+      sparks.forEach(s => {
+        s.update();
+        s.draw();
+      });
+      requestAnimationFrame(animateSparks);
+    }
+    animateSparks();
+
+    /* =========================================================
+       ⚡ ТРИГЕРИ ВІЗУАЛЬНИХ ЕФЕКТІВ
+       ========================================================= */
+    
+    function triggerFlash() {
+      elements.flashOverlay.classList.remove('active');
+      void elements.flashOverlay.offsetWidth; // Reflow
+      elements.flashOverlay.classList.add('active');
+    }
+
+    function createClickEffects(e) {
+      const frameRect = elements.frame.getBoundingClientRect();
+      const x = e.clientX - frameRect.left;
+      const y = e.clientY - frameRect.top;
+
+      const ripple = document.createElement('div');
+      ripple.className = 'ripple';
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+      elements.frame.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 650);
+
+      const particles = ['💖', '✨', '🌸', '❤️', '💫'];
+      for (let i = 0; i < 6; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.textContent = particles[Math.floor(Math.random() * particles.length)];
+        p.style.left = `${x}px`;
+        p.style.top = `${y}px`;
+
+        const dx = (Math.random() - 0.5) * 160 + 'px';
+        const dy = (Math.random() - 0.5) * 160 - 40 + 'px';
+        p.style.setProperty('--dx', dx);
+        p.style.setProperty('--dy', dy);
+
+        elements.frame.appendChild(p);
+        setTimeout(() => p.remove(), 850);
+      }
+
+      elements.frame.classList.remove('shake');
+      void elements.frame.offsetWidth;
+      elements.frame.classList.add('shake');
+    }
+
+    /* =========================================================
+       🎮 МЕХАНІКА ГРИ
+       ========================================================= */
+
+    elements.musicToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      elements.bgMusic.muted = !elements.bgMusic.muted;
+      elements.musicToggle.textContent = elements.bgMusic.muted ? '🔇' : '🔊';
+    });
+
+    // Плавний старт гри зі Splash екрану
+    const startAction = () => {
+      if (state.gameStarted) return;
+      state.gameStarted = true;
+      
+      triggerFlash();
+      elements.splash.classList.add('hidden');
+      elements.playable.classList.add('active');
+
+      elements.bgMusic.muted = false;
+      elements.bgMusic.play().catch(() => {});
+      elements.bgMusic.volume = 0.25;
+
+      updateGameState();
+    };
+
+    elements.splash.addEventListener('click', startAction);
+
+    function playAudio(audioEl) {
+      audioEl.currentTime = 0;
+      audioEl.play().catch(() => {});
+    }
+
+    function updateGameState() {
+      document.querySelectorAll('.stage-layer').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.contour').forEach(el => el.classList.remove('active'));
+      elements.hitboxTop.classList.remove('active');
+      elements.hitboxBottom.classList.remove('active');
+
+      // Перевірка на фінал
+      if (state.topStep >= state.maxTopSteps && state.bottomStep >= state.maxBottomSteps) {
+        elements.stages.final.classList.add('active');
+        showFinalScene();
+        return;
+      }
+
+      if (state.topStep === 0) {
+        elements.stages.base.classList.add('active');
+        elements.contours.top1.classList.add('active');
+        elements.hitboxTop.classList.add('active');
+      } else if (state.topStep === 1) {
+        elements.stages.top1.classList.add('active');
+        elements.contours.top2.classList.add('active');
+        elements.hitboxTop.classList.add('active');
+      } 
+      else if (state.topStep === 2 && state.bottomStep === 0) {
+        elements.stages.top2.classList.add('active');
+        elements.contours.bottom1.classList.add('active');
+        elements.hitboxBottom.classList.add('active');
+      }
+    }
+
+    elements.hitboxTop.addEventListener('click', (e) => {
+      if (state.topStep < state.maxTopSteps) {
+        state.topStep++;
+        triggerFlash();
+        createClickEffects(e);
+        playAudio(elements.removeSound);
+        updateGameState();
+      }
+    });
+
+    elements.hitboxBottom.addEventListener('click', (e) => {
+      if (state.topStep >= state.maxTopSteps && state.bottomStep < state.maxBottomSteps) {
+        state.bottomStep++;
+        triggerFlash();
+        createClickEffects(e);
+        playAudio(elements.removeSound);
+        updateGameState();
+      }
+    });
+
+    // Фінальна Сцена
+    function showFinalScene() {
+      if (state.isFinished) return;
+      state.isFinished = true;
+
+      triggerFlash();
+      playAudio(elements.winSound);
+      elements.cta.classList.add('active');
+    }
+
+    function goGame() {
+      window.location.href = 'https://hanimax.com/serials/may-i-watch-at-least/1';
+    }
+  </script>
+</body>
+</html>
