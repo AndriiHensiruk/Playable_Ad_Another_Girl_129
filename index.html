@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="uk">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <title>Playable_Ad_Another_Girl_129</title>
@@ -25,7 +25,6 @@
       overflow: hidden;
     }
 
-    /* ОСНОВНИЙ КОНТЕЙНЕР (9:16) */
     .frame {
       position: relative;
       width: 100vw;
@@ -39,7 +38,6 @@
       transform-style: preserve-3d;
     }
 
-    /* 🎥 Camera Drift (постійне живе дихання всієї сцени) */
     .frame-viewport {
       position: absolute;
       inset: -5%;
@@ -49,7 +47,6 @@
       will-change: transform, filter;
     }
 
-    /* 🌫️ Motion Blur під час швидкого руху/струсу */
     .frame.shake {
       animation: screenShake 0.35s cubic-bezier(.36,.07,.19,.97) both;
     }
@@ -78,7 +75,6 @@
       pointer-events: none;
     }
 
-    /* 🏔️ Паралакс-шар фону */
     .splash-bg {
       position: absolute;
       inset: -5%;
@@ -89,7 +85,6 @@
       will-change: transform;
     }
 
-    /* 🏔️ Паралакс-шар персонажа */
     .splash-hero {
       position: absolute;
       inset: 0;
@@ -137,19 +132,18 @@
       will-change: transform, filter;
     }
 
-    /* 💡 Light Sweep (Світловий відблиск) */
     .start-btn::after, .cta button::after {
       content: '';
       position: absolute;
-      top: 30%;
+      top: -50%;
       left: -150%;
       width: 60%;
-      height: 50%;
+      height: 200%;
       background: linear-gradient(
         60deg,
         transparent 30%,
         rgba(255, 255, 255, 0.85) 50%,
-        transparent 50%
+        transparent 70%
       );
       transform: rotate(25deg);
       animation: lightSweep 2.8s infinite ease-in-out;
@@ -168,7 +162,6 @@
       visibility: visible;
     }
 
-    /* 🎬 Cinematic Zoom / Дихання шарів */
     .stage-layer {
       position: absolute;
       inset: 0;
@@ -188,7 +181,6 @@
       transform: scale(1.02);
     }
 
-    /* Контури */
     .contour {
       position: absolute;
       inset: 0;
@@ -208,7 +200,6 @@
       animation: contourGlow 1.5s ease-in-out infinite alternate, characterBreathing 4s ease-in-out infinite alternate;
     }
 
-    /* Хітбокси */
     .hitbox {
       position: absolute;
       z-index: 100 !important;
@@ -234,7 +225,6 @@
       left: 15%;
     }
 
-    /* 💥 Покращений Ripple + Shockwave */
     .ripple {
       position: absolute;
       border-radius: 50%;
@@ -246,7 +236,6 @@
       will-change: transform, opacity;
     }
 
-    /* Частинки тапів */
     .particle {
       position: absolute;
       pointer-events: none;
@@ -256,9 +245,8 @@
       will-change: transform, opacity;
     }
 
-    /* === ОБОРЛОНКИ ТА ЕФЕКТИ НАКЛАДАННЯ === */
+    /* === ОБОРЛОНКИ ТА ЕФЕКТИ === */
 
-    /* ✨ Canvas для іскор (Floating Spark Particles) */
     #sparkCanvas {
       position: absolute;
       inset: 0;
@@ -268,7 +256,6 @@
       z-index: 120;
     }
 
-    /* 🌞 Bloom Overlay */
     .bloom-overlay {
       position: absolute;
       inset: 0;
@@ -278,7 +265,6 @@
       mix-blend-mode: screen;
     }
 
-    /* 🌗 Vignette Overlay*/
     .vignette-overlay {
       position: absolute;
       inset: 0;
@@ -287,11 +273,10 @@
       background: radial-gradient(circle at center, transparent 55%, rgba(10, 5, 18, 0.75) 100%);
     }
 
-    /* ⚡ Flash при зміні сцени */
     .flash-overlay {
       position: absolute;
       inset: 0;
-      background: #ffffff;
+      background: #191526; 
       opacity: 0;
       pointer-events: none;
       z-index: 160;
@@ -324,7 +309,6 @@
       transform: translateX(-50%) scale(1);
     }
 
-    /* ✨ Glow навколо CTA та пульсація */
     .cta button {
       position: relative;
       width: 100%;
@@ -338,9 +322,9 @@
       overflow: hidden;
       border-radius: 20px;
       will-change: transform, filter;
+      margin-bottom: 10%;
     }
 
-    /* Кнопка музики */
     .music-btn {
       position: absolute;
       top: 40px;
@@ -365,16 +349,14 @@
       transform: scale(0.9);
     }
 
-    /* === КЛЮЧОВІ АНІМАЦІЇ === */
+    /* ===  АНІМАЦІЇ=== */
 
-    /* 🎥 Camera Drift Animation */
     @keyframes cameraDrift {
       0% { transform: scale(1) translate(0, 0); }
       50% { transform: scale(1.025) translate(-1%, 0.8%); }
       100% { transform: scale(1.015) translate(1%, -0.5%); }
     }
 
-    /* 🏔️ Parallax Bg */
     @keyframes parallaxBg {
       0% { transform: scale(1.1) translate(0, 0); }
       100% { transform: scale(1.15) translate(-1.5%, -1%); }
@@ -386,13 +368,11 @@
       100% { transform: scale(1); }
     }
 
-    /* ✨ CTA Glow */
     @keyframes ctaGlow {
       0% { filter: drop-shadow(0 0 12px rgba(255, 65, 108, 0.6)); }
       100% { filter: drop-shadow(0 0 28px rgba(255, 105, 180, 0.95)) drop-shadow(0 0 40px rgba(255,20,147,0.5)); }
     }
 
-    /* 💡 Light Sweep */
     @keyframes lightSweep {
       0% { left: -150%; }
       35%, 100% { left: 150%; }
@@ -418,7 +398,6 @@
       100% { opacity: 1; filter: drop-shadow(0 0 15px rgba(255,255,255,1)) drop-shadow(0 0 25px rgba(255,105,180,0.8)); }
     }
 
-    /* 💥 Enhanced Ripple */
     @keyframes enhancedRipple {
       0% { width: 0px; height: 0px; opacity: 1; filter: blur(0px); }
       100% { width: 260px; height: 260px; opacity: 0; filter: blur(4px); }
@@ -429,17 +408,15 @@
       100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.6) rotate(25deg); }
     }
 
-    /* 🌫️ Screen Shake & Motion Blur */
     @keyframes screenShake {
-      0% { transform: translate3d(0,0,0); filter: blur(0px); }
-      20% { transform: translate3d(-6px, 3px, 0); filter: blur(1.5px); }
-      40% { transform: translate3d(5px, -4px, 0); filter: blur(1px); }
-      60% { transform: translate3d(-4px, 2px, 0); filter: blur(0.5px); }
-      80% { transform: translate3d(2px, -1px, 0); filter: blur(0px); }
-      100% { transform: translate3d(0, 0, 0); filter: blur(0px); }
+      0% { transform: translate3d(0,0,0); filter: drop-shadow(0 0 0 rgba(52, 48, 48, 0)); }
+      20% { transform: translate3d(-6px, 3px, 0); filter: brightness(0.7) blur(1px); }
+      40% { transform: translate3d(5px, -4px, 0); filter: brightness(0.85) blur(0.5px); }
+      60% { transform: translate3d(-4px, 2px, 0); filter: brightness(0.9); }
+      80% { transform: translate3d(2px, -1px, 0); filter: brightness(1); }
+      100% { transform: translate3d(0, 0, 0); filter: brightness(1); }
     }
 
-    /* ⚡ Flash Animation */
     @keyframes flashAnim {
       0% { opacity: 0.85; }
       100% { opacity: 0; }
@@ -449,10 +426,8 @@
 <body>
 
   <div class="frame" id="mainFrame">
-    <!-- Viewport для ефекту живого руху камери -->
     <div class="frame-viewport" id="viewport">
       
-      <!-- Overlays (Накладення атмосферності) -->
       <div class="bloom-overlay"></div>
       <div class="vignette-overlay"></div>
       <div class="flash-overlay" id="flashOverlay"></div>
@@ -472,18 +447,16 @@
       <div class="playable" id="playable">
         <button id="musicToggle" class="music-btn">🔊</button>
 
-        <!-- Шари сцен (.png) -->
         <div id="stageBase" class="stage-layer active" style="background-image: url('assets/scene_base.png');"></div>
         <div id="stageTop1" class="stage-layer" style="background-image: url('assets/scene_top_1.png');"></div>
         <div id="stageTop2" class="stage-layer" style="background-image: url('assets/scene_top_2.png');"></div>
         <div id="stageFinal" class="stage-layer" style="background-image: url('assets/scene_final.png');"></div>
 
-        <!-- Контури -->
         <img src="assets/contour_top_1.png" id="contourTop1" class="contour active" alt="Contour">
         <img src="assets/contour_top_2.png" id="contourTop2" class="contour" alt="Contour">
         <img src="assets/contour_bottom_1.png" id="contourBottom1" class="contour" alt="Contour">
+        <img src="assets/contour_bottom_2.png" id="contourBottom2" class="contour" alt="Contour">
 
-        <!-- Хітбокси -->
         <div id="hitboxTop" class="hitbox top active"></div>
         <div id="hitboxBottom" class="hitbox bottom"></div>
 
@@ -506,7 +479,7 @@
       topStep: 0,       
       bottomStep: 0,    
       maxTopSteps: 2,   
-      maxBottomSteps: 1,
+      maxBottomSteps: 2, 
       gameStarted: false,
       isFinished: false
     };
@@ -537,12 +510,13 @@
       contours: {
         top1: document.getElementById('contourTop1'),
         top2: document.getElementById('contourTop2'),
-        bottom1: document.getElementById('contourBottom1')
+        bottom1: document.getElementById('contourBottom1'),
+        bottom2: document.getElementById('contourBottom2')
       }
     };
 
     /* =========================================================
-       ✨ FLOATING SPARK PARTICLES (Атмосферний Canvas)
+       ✨ FLOATING SPARK PARTICLES 
        ========================================================= */
     const ctx = elements.canvas.getContext('2d');
     let sparks = [];
@@ -601,12 +575,14 @@
        ⚡ ТРИГЕРИ ВІЗУАЛЬНИХ ЕФЕКТІВ
        ========================================================= */
     
+    
     function triggerFlash() {
       elements.flashOverlay.classList.remove('active');
       void elements.flashOverlay.offsetWidth; // Reflow
       elements.flashOverlay.classList.add('active');
     }
 
+   
     function createClickEffects(e) {
       const frameRect = elements.frame.getBoundingClientRect();
       const x = e.clientX - frameRect.left;
@@ -651,7 +627,6 @@
       elements.musicToggle.textContent = elements.bgMusic.muted ? '🔇' : '🔊';
     });
 
-    // Плавний старт гри зі Splash екрану
     const startAction = () => {
       if (state.gameStarted) return;
       state.gameStarted = true;
@@ -680,7 +655,6 @@
       elements.hitboxTop.classList.remove('active');
       elements.hitboxBottom.classList.remove('active');
 
-      // Перевірка на фінал
       if (state.topStep >= state.maxTopSteps && state.bottomStep >= state.maxBottomSteps) {
         elements.stages.final.classList.add('active');
         showFinalScene();
@@ -701,6 +675,11 @@
         elements.contours.bottom1.classList.add('active');
         elements.hitboxBottom.classList.add('active');
       }
+      else if (state.topStep === 2 && state.bottomStep === 1) {
+        elements.stages.final.classList.add('active');
+        elements.contours.bottom2.classList.add('active');
+        elements.hitboxBottom.classList.add('active');
+      }
     }
 
     elements.hitboxTop.addEventListener('click', (e) => {
@@ -718,18 +697,22 @@
         state.bottomStep++;
         triggerFlash();
         createClickEffects(e);
-        playAudio(elements.removeSound);
+        
+        if (state.bottomStep >= state.maxBottomSteps) {
+          playAudio(elements.winSound);
+        } else {
+          playAudio(elements.removeSound);
+        }
+        
         updateGameState();
       }
     });
 
-    // Фінальна Сцена
     function showFinalScene() {
       if (state.isFinished) return;
       state.isFinished = true;
 
       triggerFlash();
-      playAudio(elements.winSound);
       elements.cta.classList.add('active');
     }
 
